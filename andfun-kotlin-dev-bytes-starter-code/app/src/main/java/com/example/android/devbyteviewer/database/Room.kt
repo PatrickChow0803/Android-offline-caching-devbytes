@@ -16,3 +16,12 @@
  */
 
 package com.example.android.devbyteviewer.database
+
+import androidx.room.Dao
+
+// An offline cache requires 2 methods
+// One to load the values from the cache and another to store values
+@Dao
+interface VideoDao{
+
+}

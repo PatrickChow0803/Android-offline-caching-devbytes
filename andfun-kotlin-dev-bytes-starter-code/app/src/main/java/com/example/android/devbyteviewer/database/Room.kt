@@ -18,10 +18,8 @@
 package com.example.android.devbyteviewer.database
 
 import android.arch.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import android.content.Context
+import androidx.room.*
 
 // An offline cache requires 2 methods
 // One to load the values from the cache and another to store values
@@ -36,4 +34,29 @@ interface VideoDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg video: DatabaseVideo)
 
+}
+
+@Database(entities = [DatabaseVideo::class], version = 1, exportSchema = false)
+abstract class VideosDatabase:RoomDatabase(){
+
+    // Used to get access to the video dao
+    abstract val videoDao: VideoDao
+}
+
+private lateinit var INSTANCE: VideosDatabase
+
+fun getDatabase(context: Context): VideosDatabase{
+    // INSTANCE.isInitialized can be used on lateinit variables to check to see if they've been assigned to something
+    // This if statement checks to see if it isn't initialized. If it isn't, then build and initialize it.
+    // synchronized makes it thread safe.
+    // When a thread invokes a synchronized method, it automatically acquires the lock for that object and releases it when the thread completes its task.
+    synchronized(VideosDatabase::class.java){
+        if(!::INSTANCE.isInitialized){
+            INSTANCE = Room.databaseBuilder(context.applicationContext,
+                    VideosDatabase::class.java,
+                    "videos").build()
+        }
+    }
+
+    return INSTANCE
 }

@@ -17,6 +17,7 @@
 
 package com.example.android.devbyteviewer.database
 
+import android.arch.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -28,7 +29,7 @@ import androidx.room.Query
 interface VideoDao{
 
     @Query("SELECT * FROM databasevideo")
-    fun getVideos(): List<DatabaseVideo>
+    fun getVideos(): LiveData<List<DatabaseVideo>>
 
     // vararg is how a function can take in an unknown number of arguments
     // OnConflictStrategy.REPLACE because we want to overwrite the last saved value with the new one

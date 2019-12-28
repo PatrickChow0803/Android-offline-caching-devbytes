@@ -18,10 +18,21 @@
 package com.example.android.devbyteviewer.database
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 // An offline cache requires 2 methods
 // One to load the values from the cache and another to store values
 @Dao
 interface VideoDao{
+
+    @Query("SELECT * FROM databasevideo")
+    fun getVideos(): List<DatabaseVideo>
+
+    // vararg is how a function can take in an unknown number of arguments
+    // OnConflictStrategy.REPLACE because we want to overwrite the last saved value with the new one
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg video: DatabaseVideo)
 
 }
